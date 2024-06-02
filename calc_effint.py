@@ -91,5 +91,4 @@ def make_fname(nt, argnames):
 def fprocess(qlst, *argv):
     return qlst
 
-
 qtts = ap.get_qtt_dict(mode, init_lst, update_lst, fprocess, check_exist, nalgos)
