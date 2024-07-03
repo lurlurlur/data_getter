@@ -33,7 +33,10 @@ def check_exist(nt, argnames):
     return os.path.isfile(make_fname(nt, argnames, 1, calc_mode, True))
 
 def init_dict(nt, *argv):
-    syssize = int(nt.l) + int(nt.L)
+    if 'M' in nt._fields or 'i' in nt._fields:
+        syssize = int(nt.l) + int(nt.L) + int(nt.M)
+    else:
+        syssize = int(nt.l) + int(nt.L)
     d = dict()
     for i in range(1, syssize + 1):
         d[i] = []
@@ -41,7 +44,10 @@ def init_dict(nt, *argv):
 
 def update_dict(qdict, dname, nt):
     global calc_mode
-    syssize = int(nt.l) + int(nt.L)
+    if 'M' in nt._fields or 'i' in nt._fields:
+        syssize = int(nt.l) + int(nt.L) + int(nt.M)
+    else:
+        syssize = int(nt.l) + int(nt.L)
     fname = f'{dname}/v_vals_a{nt.a}'
     if not os.path.isfile(fname):
         #print(f'{fname} not exist')
@@ -61,8 +67,11 @@ def update_dict(qdict, dname, nt):
 
 def save_vs(qdict, nt, *argv):
     global calc_mode
-    l, L = int(nt.l), int(nt.L)
-    max_range = l + L if calc_mode == 0 else L
+    if 'M' in nt._fields:
+        max_range = int(nt.l) + int(nt.L) + int(nt.M)
+    else:
+        max_range = int(nt.l) + int(nt.L) if calc_mode == 0 else int(nt.L)
+
     for r in range(1, max_range + 1):
         fname = make_fname(nt, ap.Argnames, r, calc_mode, False)
         ap.save_lst(fname, qdict[r])

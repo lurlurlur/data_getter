@@ -3,14 +3,15 @@ import os
 import sys
 import numpy as np
 
-if len(sys.argv) != 4:
-    print("Usage : python3 get_vs.py <mode> <number of algorithms> <nsites>")
+if len(sys.argv) != 5:
+    print("Usage : python3 get_vs.py <mode> <number of algorithms> <nsites> <sym>")
     exit()
 
 mode = int(sys.argv[1])
 nalgos = int(sys.argv[2])
 nsites = int(sys.argv[3])
-NE = 30
+sym = int(sys.argv[4])
+NE = 30 if sym == 0 else 15
 
 def make_fname(nt, argnames):
     fname = f'../p{mode}_result/isp/isp_agr'
@@ -30,6 +31,8 @@ def init_agr(nt, *argv):
 
 def update_agr(qlst, dname, nt):
     fname = f'{dname}/int_spc_a{nt.a}_n{nsites}'
+    if sym != 0:
+        fname += '_sym'
     if not os.path.isfile(fname):
         return qlst
     isparr = np.array(ap.read_file(fname))
@@ -47,6 +50,8 @@ def save_agr(qlst, nt, *argv):
         return None
     agr = sum(qlst) / len(qlst)
     fname = make_fname(nt, ap.Argnames)
+    if sym != 0:
+        fname += '_sym'
     print(f'{fname} : {agr}')
     ap.save_lst(fname, [agr])
     del qlst

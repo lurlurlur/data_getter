@@ -15,7 +15,10 @@ def init_lst(*argv):
     return []
 
 def update_lst(qlst, dname, nt):
-    syssize = int(nt.l) + int(nt.L)
+    if 'M' in nt._fields:
+        syssize = int(nt.l) + int(nt.L) + int(nt.M)
+    else:
+        syssize = int(nt.l) + int(nt.L) if calc_mode == 0 else int(nt.L)
     a = nt.a
     f0 = f'{dname}/tisj_a{a}_0'
     if not os.path.isfile(f0):
@@ -69,8 +72,18 @@ elif calc_mode == 1:
 
 keys = qtts.keys()
 for k in keys:
-    l, w, L, W, a = k
-    syssize = int(l) + int(L)
+    if len(k) == 5:
+        l, w, L, W, a = k
+        syssize = int(l) + int(L)
+    elif len(k) == 6 and mode == 8:
+        l, w, L, M, W, a = k
+        syssize = int(l) + int(L) + int(M)
+    elif len(k) == 6 and mode == 0:
+        l, w, L, W, i, a = k
+        syssize = int(l) + int(L)
+    elif len(k) == 7:
+        l, w, L, M, W, i, a = k
+        syssize = int(l) + int(L) + int(M)
     qarr = qtts[k]
     for i in range(syssize):
         try:

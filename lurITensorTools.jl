@@ -39,6 +39,41 @@ function build_disorder(l, w, L, W)
 	return disorder
 end
 
+function build_disorder(l, w, L, M, W)
+	syssize = L + l + M
+	disorder = zeros(syssize)
+	for i=1:syssize
+		ds = (L < i && i <= syssize - M) ? w : W
+		disorder[i] = (rand() - 0.5) * 2 * ds
+	end
+	return disorder
+end
+
+function build_disorder_qp(l, w, L, W, ic, phi)
+	syssize = l + L
+	disorder = zeros(syssize)
+	for i=1:syssize
+		disorder[i] = (i > l) ? W * cos((2 * pi * ic) * i + phi) : (rand() - 0.5) * 2 * w
+	end
+	return disorder
+end
+
+function build_disorder_qp(l, w, L, M, W, ic, phi1, phi2)
+	syssize = L + l + M
+	disorder = zeros(syssize)
+	for i=1:syssize
+		if i <= L
+			disorder[i] = W * cos((2 * pi * ic) * i + phi1)
+		elseif i <= L + l
+			disorder[i] = (rand() - 0.5) * 2 * w
+		else
+			disorder[i] = W * cos((2 * pi * ic) * i + phi2)
+		end
+	end
+	return disorder
+end
+
+
 function build_XXZ(sites, L, W; disorder=[], periodic=false)
         ampo = OpSum()
         for j=1:L-1

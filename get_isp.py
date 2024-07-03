@@ -3,16 +3,21 @@ import os
 import sys
 import numpy as np
 
-if __name__ == '__main__':
-    if len(sys.argv) != 4:
-        print("Usage : python3 get_medabstisj.py <mode> <number of algorithms> <nsites>")
-        exit()
-    mode = int(sys.argv[1])
-    nalgos = int(sys.argv[2])
-    nsites = int(sys.argv[3])
-
 def init_lst(*argv):
     return []
+
+def count_ones(n):
+    if n == 0:
+        return 0
+    return count_ones(n >> 1) + (0 if n & 1 == 0 else 1)
+
+def symmetrize(int_spc, nones):
+    assert int_spc.shape[0] == 1 << (nones * 2)
+    symmed = []
+    for i in range(1 << (nones * 2)):
+        if count_ones(i) == nones:
+            symmed.append(int_spc[i])
+    return np.array(symmed)
 
 def modify_spc(int_spc, s):
     assert int_spc.shape[0] == 1 << nsites
@@ -43,18 +48,15 @@ def update_lst(qlst, dname, nt):
     int_spc = v_full[::p]
     for s in range(nsites):
         int_spc = modify_spc(int_spc, s)
+
+    if sym != 0:
+        fname_isp += '_sym'
+        int_spc = symmetrize(int_spc, nsites//2)
+
     int_spc_sorted = np.sort(int_spc)
     ap.save_lst(fname_isp, int_spc_sorted)
 
-    #spec_fname = '../edv2_make/xxz_spectrum_from_realiz_actual'
-    #dis_fname = f'{dname}/disorder'
-    #disorder = ap.read_file(dis_fname)
 
-    #cmd = f'{spec_fname} {syssize}'
-    #for i in range(syssize):
-    #    cmd += f' {disorder[i]}'
-    #cmd += f' {dname}/spectrum'
-    #os.system(cmd)
     return qlst
 
 def check_exist(nt, argnames):
@@ -70,4 +72,14 @@ def make_fname(nt, argnames):
 def fprocess(qlst, *argv):
     return qlst
 
-qtts = ap.get_qtt_dict(mode, init_lst, update_lst, fprocess, check_exist, nalgos)
+
+if __name__ == '__main__':
+    if len(sys.argv) != 5:
+        print("Usage : python3 get_medabstisj.py <mode> <number of algorithms> <nsites> <sym>")
+        exit()
+    mode = int(sys.argv[1])
+    nalgos = int(sys.argv[2])
+    nsites = int(sys.argv[3])
+    sym = int(sys.argv[4])
+
+    qtts = ap.get_qtt_dict(mode, init_lst, update_lst, fprocess, check_exist, nalgos)

@@ -4,7 +4,7 @@ import copy
 import time
 from collections import namedtuple
 
-float_args = ['w', 'W', 'm']
+float_args = ['w', 'W', 'm', 'i']
 rng = np.random.default_rng(int((time.time() * 10000) % 10000))
 
 Argtype = None
