@@ -19,12 +19,18 @@ def make_fname(nt, argnames, s, d):
 def check_exist(nt, argnames):
     return os.path.isfile(make_fname(nt, argnames, 0, 0))
 
+def syssize_from_nt(nt):
+    if 'M' in nt._fields:
+        return int(nt.l) + int(nt.L) + int(nt.M)
+    return int(nt.l) + int(nt.L)
+    
+
 def init_fs(nt, *argv):
-    syssize = int(nt.l) + int(nt.L)
+    syssize = syssize_from_nt(nt)
     return np.zeros((800, syssize, syssize))
     
 def update_fs(arr, dname, nt):
-    syssize = int(nt.l) + int(nt.L)
+    syssize = syssize_from_nt(nt)
     for s in range(syssize):
         for d in range(syssize):
             fname = f'{dname}/f_vals_optimized_a{nt.a}_s{s}_d{d}'
@@ -34,7 +40,7 @@ def update_fs(arr, dname, nt):
     return arr
 
 def save_fs(arr, nt, *argv):
-    syssize = int(nt.l) + int(nt.L)
+    syssize = syssize_from_nt(nt)
     for s in range(syssize):
         for d in range(syssize):
             hist = arr[:, s, d]
