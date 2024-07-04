@@ -27,7 +27,7 @@ def syssize_from_nt(nt):
 
 def init_fs(nt, *argv):
     syssize = syssize_from_nt(nt)
-    return np.zeros((800, syssize, syssize))
+    return np.zeros((1600, syssize, syssize))
     
 def update_fs(arr, dname, nt):
     syssize = syssize_from_nt(nt)
@@ -36,7 +36,9 @@ def update_fs(arr, dname, nt):
             fname = f'{dname}/f_vals_optimized_a{nt.a}_s{s}_d{d}'
             if not os.path.isfile(fname):
                 continue
-            arr[:, s, d] += np.array(ap.read_file(fname))
+            fs = ap.read_file(fname)
+            if len(fs) == 1600:
+                arr[:, s, d] += np.array(fs)
     return arr
 
 def save_fs(arr, nt, *argv):
