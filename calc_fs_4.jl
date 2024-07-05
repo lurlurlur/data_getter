@@ -7,11 +7,12 @@ function main()
 	nthr = Threads.nthreads()
 	syssize = parse(Int64, ARGS[1])
 	niter = parse(Int64, ARGS[2])
-	ssite = parse(Int64, ARGS[3])
-	esite = parse(Int64, ARGS[4])
+	anum = parse(Int64, ARGS[3])
+	ssite = parse(Int64, ARGS[4])
+	esite = parse(Int64, ARGS[5])
 	ls = [0]
 	ws = [0.2]
-	Ws = [5.0, 7.0, 9.0]
+	Ws = [3.0, 4, 5, 6, 7, 8, 9, 10, 12, 15, 18, 21, 25, 30]
 
 	for l in ls
 		for W in Ws
@@ -24,7 +25,7 @@ function main()
 
 					f = open("$(result_dir)/disorder", "r")
 					disorder = readlines(f)
-					cmd = `$(fs_calc_dir) $(length(disorder)) $disorder $(result_dir) $(ssite) $(esite)`
+					cmd = `$(fs_calc_dir) $(length(disorder)) $disorder $(result_dir) $(anum) $(ssite) $(esite)`
 					run(cmd)
 					println("Completed for r=$(result_dir)")
 				end
@@ -33,8 +34,8 @@ function main()
 	end
 end
 
-if length(ARGS) != 4
-	println("Usage : julia --threads <# of threads> calc_fs.jl <L> <# of iterations> <ssite> <esite>")
+if length(ARGS) != 5
+	println("Usage : julia --threads <# of threads> calc_fs.jl <L> <# of iterations> <anum> <ssite> <esite>")
 	exit(1)
 end
 main()
