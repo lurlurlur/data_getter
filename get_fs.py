@@ -3,14 +3,19 @@ import os
 import numpy as np
 import sys
 
-if len(sys.argv) != 3:
-    print("Usage : python3 get_fs.py <mode> <number of algorithms>")
+if len(sys.argv) != 4:
+    print("Usage : python3 get_fs.py <mode> <number of algorithms> <onlyloc?>")
     exit()
 mode = int(sys.argv[1])
 nalgos = int(sys.argv[2])
+onlyloc = int(sys.argv[3])
+if onlyloc not in [0, 1]:
+    print(f"Not valid argument: {onlyloc}")
+    exit()
 
 def make_fname(nt, argnames, s, d):
-    fname = f'../p{mode}_result/fs/fs'
+    fname = f'../p{mode}_result/fs/'
+    fname += 'fsloc' if onlyloc == 1 else 'fs'
     for n in argnames:
         attr = getattr(nt, n)
         fname += f'_{n}{float(attr)}' if n in ap.float_args else f'_{n}{int(attr)}'
@@ -33,7 +38,10 @@ def update_fs(arr, dname, nt):
     syssize = syssize_from_nt(nt)
     for s in range(syssize):
         for d in range(syssize):
-            fname = f'{dname}/f_vals_optimized_a{nt.a}_s{s}_d{d}'
+            if onlyloc == 1:
+                fname = f'{dname}/f_vals_loc_a{nt.a}_s{s}_d{d}'
+            else:
+                fname = f'{dname}/f_vals_optimized_a{nt.a}_s{s}_d{d}'
             if not os.path.isfile(fname):
                 continue
             fs = ap.read_file(fname)

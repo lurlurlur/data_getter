@@ -9,7 +9,8 @@ function main()
 	niter = parse(Int64, ARGS[1])
 	anum = parse(Int64, ARGS[2])
 	makenew = parse(Int64, ARGS[3])
-	size_configs = [(4, 4, 4)]
+	start = parse(Int64, ARGS[4])
+	size_configs = [(3, 6, 3)]
 	ws = [0.2]
 	Ws = [3.0, 4, 5, 6, 7, 8, 9, 10, 12.0, 15.0, 18.0, 21.0, 25.0, 30.0]
 
@@ -22,7 +23,7 @@ function main()
 				syssize = L + l + M
 				println(dis_dir)
 
-				Threads.@threads for i=1:nthr*niter
+				Threads.@threads for i=start+1:start+nthr*niter
 					result_dir = "$(dis_dir)/r$(i)"
 					(!isdir(result_dir)) && (mkdir(result_dir))
 
@@ -49,7 +50,7 @@ function main()
 end
 
 if length(ARGS) != 3
-	println("Usage : julia --threads <# of threads> calc_fs_7.jl <# of iterations> <anum> <new?1:0>")
+	println("Usage : julia --threads <# of threads> calc_fs_7.jl <# of iterations> <anum> <new?1:0> <start>")
 	exit(1)
 end
 main()

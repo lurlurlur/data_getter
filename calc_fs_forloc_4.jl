@@ -14,7 +14,8 @@ function main()
 	start = parse(Int64, ARGS[5]) 
 	ssite = parse(Int64, ARGS[6])
 	esite = parse(Int64, ARGS[7])
-	ls = [0]
+	cssite = parse(Int64, ARGS[8])
+	ls = [0, 4]
 	ws = [0.2]
 	Ws = [3.0, 4, 5, 6, 7, 8, 9, 10, 12.0, 15.0, 18.0, 21, 25, 30]
 
@@ -42,7 +43,7 @@ function main()
 						disorder = readlines(f)
 					end
 					close(f)
-					cmd = `$(fs_calc_dir) $(length(disorder)) $disorder $(result_dir) $(anum) $(ssite) $(esite)`
+					cmd = `$(fs_calc_dir) $(length(disorder)) $disorder $(result_dir) $(anum) $(ssite) $(esite) $(cssite)`
 					run(cmd)
 					println("Completed for $(result_dir)")
 				end
@@ -51,8 +52,8 @@ function main()
 	end
 end
 
-if length(ARGS) != 7
-	println("Usage : julia --threads <# of threads> calc_fs.jl <L> <# of iterations> <anum> <new?1:0> <start> <ssite> <esite>")
+if length(ARGS) != 8
+	println("Usage : julia --threads <# of threads> calc_fs.jl <L> <# of iterations> <anum> <new?1:0> <index start> <ssite> <esite> <calc start site>")
 	exit(1)
 end
 main()
