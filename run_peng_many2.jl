@@ -21,7 +21,7 @@ function main()
 		for W in Ws
 			for w in ws
 				for ic in ics
-					dis_dir = "$(data_dir)/p0_l$(l)_w$(w)_L$(L)_W$(W)_i$(ic)"
+					dis_dir = "$(data_dir)/p2_l$(l)_w$(w)_L$(L)_W$(W)_i$(ic)"
 					println(dis_dir)
 					(!isdir(dis_dir)) && (mkdir(dis_dir))
 
@@ -31,7 +31,7 @@ function main()
 
 						f = open("$(result_dir)/disorder", "w")
 						phi = 2 * pi * rand()
-						disorder = build_disorder_qp(l, w, L, W, ic * sqrt(2), phi)
+						disorder = build_disorder_qp(l, w, L, W * sqrt(2/3), ic * sqrt(2), phi)
 					
 						for d in disorder
 							println(f, d)
